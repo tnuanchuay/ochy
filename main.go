@@ -1,17 +1,17 @@
 package main
 
 const (
-	MODE_INIT		= 		"init"
-	MODE_CREATE		=		"create"
-	MODE_REMOVE		=		"remove"
-	MODE_ADD		=		"add"
+	MODE_INIT			= 		"init"
+	MODE_ROLE			=		"role"
+	MODE_MACHINE		=		"machine"
+	MODE_EXE			=		"exe"
 )
 
 var Mode = []string{
 	MODE_INIT,
-	MODE_CREATE,
-	MODE_REMOVE,
-	MODE_ADD,
+	MODE_ROLE,
+	MODE_MACHINE,
+	MODE_EXE,
 }
 
 func main(){

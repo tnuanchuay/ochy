@@ -6,14 +6,14 @@ import (
 )
 
 func Test_new(t *testing.T){
-	s := []string{"ochy", "create", "role", "hk-prod"}
+	s := []string{"ochy", "role", "create", "hk-prod"}
 	pargs := _new(s)
 
-	if pargs.Mode != MODE_CREATE {
-		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_CREATE, pargs.Mode))
+	if pargs.Mode != MODE_ROLE {
+		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_ROLE, pargs.Mode))
 	}
 
-	s = []string{"ochy", "damn", "role", "hk-prod"}
+	s = []string{"ochy", "damn", "create", "hk-prod"}
 	pargs = _new(s)
 	if pargs != nil{
 		t.Error(fmt.Sprintf("expect %s, actual %s", "nil", pargs))
@@ -30,8 +30,8 @@ func TestGetMode(t *testing.T){
 		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_INIT, r))
 	}
 
-	if r := getMode([]string{"ochy", "create", "role", "hk-production"}); r != MODE_CREATE{
-		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_CREATE, r))
+	if r := getMode([]string{"ochy", "role", "create", "hk-production"}); r != MODE_ROLE{
+		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_ROLE, r))
 	}
 
 	if r := getMode([]string{"ochy", "mother", "fucker"}); r != ""{
@@ -51,7 +51,7 @@ func TestIsMode(t *testing.T){
 		t.Error(fmt.Sprintf("expect %v, actual %v", true, r))
 	}
 
-	if r := hasMode([]string{"ochy", "create", "role", "hk-production"}); r != true{
+	if r := hasMode([]string{"ochy", "role", "create", "hk-production"}); r != true{
 		t.Error(fmt.Sprintf("expect %v, actual %v", true, r))
 	}
 
