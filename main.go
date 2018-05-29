@@ -23,5 +23,8 @@ func main() {
 		doInit(pargs)
 	case MODE_USE:
 		doUse(pargs)
+	case MODE_ROLE:
+		ppargs := NewProjectProgramArgs(pargs)
+		doRole(ppargs)
 	}
 }

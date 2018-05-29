@@ -14,11 +14,7 @@ func TestAddRole(t *testing.T){
 func TestRemoveRole(t *testing.T){
 	pj := NewProject("prod")
 	pj.AddRole("hk-prod")
-
-	if v := pj.RemoveRole("hk-prod"); v != true{
-		t.Errorf("expect %s, actual %t", "true", v)
-	}
-
+	pj.RemoveRole("hk-prod")
 	if len(pj.Roles) != 0{
 		t.Errorf("expect %d, actual %d", 0, len(pj.Roles))
 	}
@@ -30,32 +26,28 @@ func TestRemoveEmptyRole(t *testing.T){
 			t.Errorf("Remove empty role should panic")
 		}
 	}()
-
-	if v := pj.RemoveRole("hk-prod"); v != true{
-		t.Errorf("expect %s, actual %t", "true", v)
-	}
-
+	pj.RemoveRole("hk-prod")
 	if len(pj.Roles) != 0{
 		t.Errorf("expect %d, actual %d", 0, len(pj.Roles))
 	}
 }
 
 func TestGetSubOps(t *testing.T){
-	ppargs := GiveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
+	ppargs := giveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
 
 	if v := getSubOps(ppargs); v != MODE_ROLE_ADD{
 		t.Errorf("expect %s, actual %s", MODE_ROLE_ADD, v)
 	}
 }
 func TestGetRoleValue(t *testing.T){
-	ppargs := GiveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
+	ppargs := giveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
 
 	if v := getRoleValue(ppargs); v != "hk-prod"{
 		t.Errorf("expect %s, actual %s", "hk-prod", v)
 	}
 }
 func TestGetRoleValueNoRoleName(t *testing.T){
-	ppargs := GiveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add",})
+	ppargs := giveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add",})
 
 	defer func() {
 		if recover() == nil{
@@ -66,7 +58,7 @@ func TestGetRoleValueNoRoleName(t *testing.T){
 	getRoleValue(ppargs)
 }
 func TestDoRoleAdd(t *testing.T){
-	ppargs := GiveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
+	ppargs := giveProjectProgramArgsMockForRole([]string{ "ochy", "role", "add", "hk-prod"})
 
 	doRole(ppargs)
 	if ppargs.Roles[0] != "hk-prod"{
@@ -74,7 +66,7 @@ func TestDoRoleAdd(t *testing.T){
 	}
 }
 func TestDoRoleRemove(t *testing.T){
-	ppargsRemove := GiveProjectProgramArgsMockForRole([]string{ "ochy", "role", "remove", "hk-prod"})
+	ppargsRemove := giveProjectProgramArgsMockForRole([]string{ "ochy", "role", "remove", "hk-prod"})
 	ppargsRemove.Roles = append(ppargsRemove.Roles, "hk-prod")
 
 	doRole(ppargsRemove)
@@ -84,7 +76,7 @@ func TestDoRoleRemove(t *testing.T){
 	}
 }
 
-func GiveProjectProgramArgsMockForRole(args []string) ProjectProgramArgs{
+func giveProjectProgramArgsMockForRole(args []string) ProjectProgramArgs{
 	return NewProjectProgramArgsMock(
 		"prod",
 		args,

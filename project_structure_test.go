@@ -63,7 +63,7 @@ func TestNewProjectProgramArgs(t *testing.T) {
 		Args:[]string {"ochy", "role", "add", "hk-prod"},
 	}
 
-	ppargs := NewProjectProgramArgs(pargs)
+	ppargs := NewProjectProgramArgs(&pargs)
 	if v := ppargs.Project.ProjectName; v != "prod" {
 		t.Errorf("expect %s, actual %s", "prod", v)
 	}

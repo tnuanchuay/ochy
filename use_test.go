@@ -11,7 +11,7 @@ import (
 )
 
 func TestDoUseConfigDoesntExist(t *testing.T) {
-	os.Args = []string{"ochy", "use", "prod.config.json"}
+	os.Args = []string{"ochy", "use", "othername.config.json"}
 	defer func() {
 		if v := recover(); v == nil {
 			t.Errorf("expect panic because config file doesn't exist")

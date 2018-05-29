@@ -6,7 +6,7 @@ func NewProjectProgramArgsMock(
 	mode string,
 )ProjectProgramArgs{
 	return ProjectProgramArgs{
-		ProgramArgs{
+		&ProgramArgs{
 			ProjectName: projectName,
 			Args:        args,
 			Mode:        mode,

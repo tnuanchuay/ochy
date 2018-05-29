@@ -8,11 +8,13 @@ import (
 const (
 	MODE_ROLE_ADD = "add"
 	MODE_ROLE_REMOVE = "remove"
+	MODE_ROLE_LIST = "list"
 )
 
 var SubOpsRole = []string{
 	MODE_ROLE_ADD,
 	MODE_ROLE_REMOVE,
+	MODE_ROLE_LIST,
 }
 
 type RoleProgramArgs struct{
@@ -24,8 +26,11 @@ type RoleProgramArgs struct{
 func NewRoleProgramArgs(pargs ProjectProgramArgs)RoleProgramArgs{
 	rpargs := RoleProgramArgs{
 		SubCommand:  getSubOps(pargs),
-		RoleName:    getRoleValue(pargs),
 		ProjectProgramArgs: pargs,
+	}
+
+	if rpargs.SubCommand != MODE_ROLE_LIST{
+		rpargs.RoleName = getRoleValue(pargs)
 	}
 
 	return rpargs
@@ -33,19 +38,37 @@ func NewRoleProgramArgs(pargs ProjectProgramArgs)RoleProgramArgs{
 
 func (p *Project) AddRole(role string){
 	p.roleMutex.Lock()
+	for _, v := range p.Roles{
+		if v == role{
+			util.Exit(fmt.Sprintf("Role name %s already exists", role))
+		}
+	}
 	p.Roles = append(p.Roles, role)
+	fmt.Println(fmt.Sprintf("Role %s has been added", role))
+	p.Save()
 	p.roleMutex.Unlock()
 }
-func (p *Project) RemoveRole(role string) bool{
+func (p *Project) RemoveRole(role string){
 	p.roleMutex.Lock()
 	for i, v := range p.Roles{
 		if v == role{
 			p.Roles = util.RemoveStringSlice(p.Roles, i)
-			return true
+			p.Save()
+			p.roleMutex.Unlock()
+			fmt.Println(fmt.Sprintf("Role %s has been removed", role))
+			return
 		}
 	}
 
-	panic(fmt.Sprintf("RoleName %s not found", role))
+	util.Exit(fmt.Sprintf("Role name %s not found", role))
+}
+func (p *Project) List(){
+	p.roleMutex.Lock()
+	fmt.Println("Roles")
+	for _, r := range p.Roles{
+		fmt.Printf("\t- %s\n", r)
+	}
+	p.roleMutex.Unlock()
 }
 
 func doRole(pargs ProjectProgramArgs){
@@ -55,14 +78,17 @@ func doRole(pargs ProjectProgramArgs){
 		rpargs.AddRole(rpargs.RoleName)
 	case MODE_ROLE_REMOVE:
 		rpargs.RemoveRole(rpargs.RoleName)
+	case MODE_ROLE_LIST:
+		rpargs.List()
 	}
 }
 func getRoleValue(pargs ProjectProgramArgs) string{
 	defer func(){
 		if v := recover(); v != nil{
-			panic("role command require role name")
+			util.Exit("Role command require role name")
 		}
 	}()
+
 	return pargs.Args[3]
 }
 func getSubOps(pargs ProjectProgramArgs) string{
@@ -72,5 +98,6 @@ func getSubOps(pargs ProjectProgramArgs) string{
 		}
 	}
 
-	panic(fmt.Sprintf("unknow subcommand %s", pargs.Args[2]))
+	util.Exit(fmt.Sprintf("unknow subcommand %s", pargs.Args[2]))
+	return ""
 }

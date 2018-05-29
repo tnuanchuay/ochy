@@ -6,6 +6,7 @@ import (
 	"github.com/tspn/ochy/util"
 	"sync"
 	"os"
+	"strings"
 )
 
 type Project struct {
@@ -16,11 +17,14 @@ type Project struct {
 }
 
 type ProjectProgramArgs struct{
-	ProgramArgs
+	*ProgramArgs
 	*Project
 }
 
-func NewProjectProgramArgs(args ProgramArgs)ProjectProgramArgs{
+func NewProjectProgramArgs(args *ProgramArgs)ProjectProgramArgs{
+	if args.ProjectName == ""{
+		util.Exit("Project isn't defined in .ochy.\nPlease select project by using 'use'.")
+	}
 	ppargs := ProjectProgramArgs{
 		ProgramArgs: args,
 		Project: Load(args.ProjectName),
@@ -38,7 +42,7 @@ func (p Project) Filename() string {
 func (p Project) Save() {
 	err := ioutil.WriteFile(p.Filename(), []byte(p.ToJson()), 0666)
 	if err != nil {
-		panic("could not initial project file")
+		util.Exit("could not initial project file")
 	}
 }
 func (p Project) Delete() {
@@ -62,7 +66,7 @@ func NewProject(projectname string) *Project {
 func Load(projectname string) *Project {
 	b, err := ioutil.ReadFile(filename(projectname))
 	if err != nil {
-		panic(err)
+		util.Exit(err)
 	}
 	var p Project
 	util.JsonToStruct(string(b), &p)
@@ -70,6 +74,9 @@ func Load(projectname string) *Project {
 	return &p
 }
 
-func filename(projectname string) string {
-	return fmt.Sprintf("%s.config.json", projectname)
+func filename(projectName string) string {
+	if strings.HasSuffix(projectName, ".config.json"){
+		return fmt.Sprintf("%s", projectName)
+	}
+	return fmt.Sprintf("%s.config.json", projectName)
 }

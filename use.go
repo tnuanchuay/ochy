@@ -14,10 +14,11 @@ func doUse(pargs *ProgramArgs) {
 		err := ioutil.WriteFile(".ochy", []byte(projectname), 0666)
 		if err != nil {
 			fmt.Println(projectname)
-			panic(err)
+			util.Exit(err)
 		}
+		fmt.Printf("Use project %s\n", projectname)
 	} else {
-		panic("project file doesn't exist")
+		util.Exit("Project file doesn't exist")
 	}
 }
 
