@@ -3,22 +3,14 @@ package project
 import (
 	"fmt"
 	"io/ioutil"
-	"net"
-
-	"github.com/tspn/ochy/role"
 	"github.com/tspn/ochy/util"
+	"github.com/tspn/ochy/model"
 )
 
 type Project struct {
 	ProjectName string
-	Machines    []Machine
-	Roles       []role.Role
-}
-
-type Machine struct {
-	Name string
-	Ip   net.IPAddr
-	Role []role.Role
+	Machines    []model.Machine
+	Roles       model.Roles
 }
 
 func (p Project) ToJson() string {
@@ -32,6 +24,32 @@ func (p Project) Save() {
 	if err != nil {
 		panic("could not initial project file")
 	}
+}
+func (p Project) GetAllRoleName() []string{
+	s := make([]string, 0)
+	for _, ss := range p.Roles{
+		s = append(s, ss.Name)
+	}
+
+	return s
+}
+func (p Project) GetRole(role string) *model.Role{
+	for _, r := range p.Roles{
+		if r.Name == role{
+			return &r
+		}
+	}
+
+	return nil
+}
+func (p Project) GetMachine(name string) *model.Machine{
+	for _, m := range p.Machines{
+		if m.Name == name{
+			return &m
+		}
+	}
+
+	return nil
 }
 
 func New(projectname string) *Project {
@@ -49,6 +67,7 @@ func Load(projectname string) *Project {
 
 	return &p
 }
+
 
 func filename(projectname string) string {
 	return fmt.Sprintf("%s.config.json", projectname)

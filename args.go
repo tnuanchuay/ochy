@@ -7,9 +7,9 @@ import (
 )
 
 type ProgramArgs struct {
-	Mode       string
-	ConfigName string
-	Args       []string
+	Mode        string
+	ProjectName string
+	Args        []string
 }
 
 func New() *ProgramArgs {
@@ -20,7 +20,7 @@ func _new(s []string) *ProgramArgs {
 	pargs.Mode = getMode(s)
 	if pargs.Mode != "" {
 		pargs.Args = os.Args
-		pargs.ConfigName = GetCurrentConfig()
+		pargs.ProjectName = GetCurrentConfig()
 		return pargs
 	} else {
 		return nil
