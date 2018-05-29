@@ -17,7 +17,7 @@ var Mode = []string{
 }
 
 func main() {
-	pargs := New()
+	pargs := NewProgramArgs()
 	switch pargs.Mode {
 	case MODE_INIT:
 		doInit(pargs)

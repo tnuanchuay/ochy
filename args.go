@@ -12,10 +12,10 @@ type ProgramArgs struct {
 	Args        []string
 }
 
-func New() *ProgramArgs {
-	return _new(os.Args)
+func NewProgramArgs() *ProgramArgs {
+	return newProgramArgs(os.Args)
 }
-func _new(s []string) *ProgramArgs {
+func newProgramArgs(s []string) *ProgramArgs {
 	pargs := new(ProgramArgs)
 	pargs.Mode = getMode(s)
 	if pargs.Mode != "" {

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"github.com/tspn/ochy/util"
 	"sync"
+	"os"
 )
 
 type Project struct {
@@ -12,6 +13,20 @@ type Project struct {
 	Machines    []Machine
 	Roles       []string
 	roleMutex   sync.Mutex
+}
+
+type ProjectProgramArgs struct{
+	ProgramArgs
+	*Project
+}
+
+func NewProjectProgramArgs(args ProgramArgs)ProjectProgramArgs{
+	ppargs := ProjectProgramArgs{
+		ProgramArgs: args,
+		Project: Load(args.ProjectName),
+	}
+
+	return ppargs
 }
 
 func (p Project) ToJson() string {
@@ -25,6 +40,9 @@ func (p Project) Save() {
 	if err != nil {
 		panic("could not initial project file")
 	}
+}
+func (p Project) Delete() {
+	os.Remove(p.Filename())
 }
 func (p Project) GetMachine(name string) *Machine{
 	for _, m := range p.Machines{
@@ -51,7 +69,6 @@ func Load(projectname string) *Project {
 
 	return &p
 }
-
 
 func filename(projectname string) string {
 	return fmt.Sprintf("%s.config.json", projectname)

@@ -12,6 +12,6 @@ func TestDoInitWhenGet2Params(t *testing.T){
 		}
 	}()
 	os.Args = []string{"ochy", "init", }
-	pargs := New()
+	pargs := NewProgramArgs()
 	doInit(pargs)
 }

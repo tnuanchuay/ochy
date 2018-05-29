@@ -17,7 +17,7 @@ func TestDoUseConfigDoesntExist(t *testing.T) {
 			t.Errorf("expect panic because config file doesn't exist")
 		}
 	}()
-	pargs := New()
+	pargs := NewProgramArgs()
 	doUse(pargs)
 }
 
@@ -28,7 +28,7 @@ func TestDoUse(t *testing.T) {
 	defer os.Remove("hk.config.json")
 	defer os.Remove(".ochy")
 
-	pargs := New()
+	pargs := NewProgramArgs()
 	doUse(pargs)
 	if !util.FileExist(".ochy") {
 		t.Errorf("expect .ochy file is created")
@@ -41,7 +41,7 @@ func TestDoUse(t *testing.T) {
 
 	os.Args = []string{"ochy", "use", "hk.config.json"}
 	ioutil.WriteFile("hk.config.json", []byte("{}"), 0666)
-	pargs = New()
+	pargs = NewProgramArgs()
 	doUse(pargs)
 	b, _ = ioutil.ReadFile(".ochy")
 	if !reflect.DeepEqual(b, []byte("hk.config.json")) {
@@ -51,7 +51,7 @@ func TestDoUse(t *testing.T) {
 
 func TestGetProjectFile(t *testing.T) {
 	os.Args = []string{"ochy", "use", "./filename.config.json"}
-	pargs := New()
+	pargs := NewProgramArgs()
 	if v := getProjectFile(pargs); v != os.Args[2] {
 		t.Error(fmt.Sprintf("expect %s, actual %s", os.Args[2], v))
 	}

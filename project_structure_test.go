@@ -52,3 +52,19 @@ func Test_filename(t *testing.T){
 		t.Error(fmt.Sprintf("expect %s, actual %s", expect, fn))
 	}
 }
+func TestNewProjectProgramArgs(t *testing.T) {
+	pj := NewProject("prod")
+	pj.Save()
+	defer pj.Delete()
+
+	pargs := ProgramArgs{
+		ProjectName:"prod",
+		Mode:"role",
+		Args:[]string {"ochy", "role", "add", "hk-prod"},
+	}
+
+	ppargs := NewProjectProgramArgs(pargs)
+	if v := ppargs.Project.ProjectName; v != "prod" {
+		t.Errorf("expect %s, actual %s", "prod", v)
+	}
+}

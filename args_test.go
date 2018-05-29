@@ -7,20 +7,20 @@ import (
 
 func Test_new(t *testing.T){
 	s := []string{"ochy", "role", "create", "hk-prod"}
-	pargs := _new(s)
+	pargs := newProgramArgs(s)
 
 	if pargs.Mode != MODE_ROLE {
 		t.Error(fmt.Sprintf("expect %s, actual %s", MODE_ROLE, pargs.Mode))
 	}
 
 	s = []string{"ochy", "damn", "create", "hk-prod"}
-	pargs = _new(s)
+	pargs = newProgramArgs(s)
 	if pargs != nil{
 		t.Error(fmt.Sprintf("expect %s, actual %s", "nil", pargs))
 	}
 
 	s = []string{}
-	pargs = _new(s)
+	pargs = newProgramArgs(s)
 	if pargs != nil{
 		t.Error(fmt.Sprintf("expect %s, actual %s", "nil", pargs))
 	}
