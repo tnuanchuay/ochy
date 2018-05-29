@@ -1,24 +1,41 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	)
 
-func TestNewRoleArgs(t *testing.T) {
-	args := ProgramArgs{
-		Mode: MODE_ROLE,
-		Args:[]string{"ochy", "role", "add", "hk-prod", "127.0.0.1"},
-		ConfigName:".ochy",
+func TestAddRole(t *testing.T){
+	pj := NewProject("prod")
+	pj.AddRole("hk-prod")
+	if pj.Roles[0] != "hk-prod"{
+		t.Errorf("expect %s, actual %s", "hk-prod", pj.Roles[0])
+	}
+}
+func TestRemoveRole(t *testing.T){
+	pj := NewProject("prod")
+	pj.AddRole("hk-prod")
+
+	if v := pj.RemoveRole("hk-prod"); v != true{
+		t.Errorf("expect %s, actual %t", "true", v)
 	}
 
-	ra := NewRoleArgs(&args)
-	if ra.Operation != OPERATION_ADD {
-		t.Errorf("expect %s, actual, %s", OPERATION_ADD, ra.Operation)
+	if len(pj.Roles) != 0{
+		t.Errorf("expect %d, actual %d", 0, len(pj.Roles))
+	}
+}
+func TestRemoveEmptyRole(t *testing.T){
+	pj := NewProject("prod")
+	defer func (){
+		if recover() == nil{
+			t.Errorf("Remove empty role should panic")
+		}
+	}()
+
+	if v := pj.RemoveRole("hk-prod"); v != true{
+		t.Errorf("expect %s, actual %t", "true", v)
 	}
 
-	if ra.MachineName != "hk-prod" {
-		t.Errorf("expect %s, actual %s", "hk-prod", ra.MachineName)
-	}
-
-	if ra.Ip != "127.0.0.1" {
-		t.Errorf("expect %s, actual %s", "127.0.0.1", ra.Ip)
+	if len(pj.Roles) != 0{
+		t.Errorf("expect %d, actual %d", 0, len(pj.Roles))
 	}
 }

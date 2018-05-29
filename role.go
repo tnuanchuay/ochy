@@ -1,40 +1,24 @@
 package main
 
-const (
-	OPERATION_ADD		=	"add"
-	OPERATION_DELETE	=	"del"
+import (
+	"github.com/tspn/ochy/util"
+	"fmt"
 )
 
-type RoleArgs struct{
-	ProgramArgs		*ProgramArgs
-	Operation		string
-	MachineName		string
-	Ip				string
+func (p *Project) AddRole(role string){
+	p.roleMutex.Lock()
+	p.Roles = append(p.Roles, role)
+	p.roleMutex.Unlock()
 }
 
-func NewRoleArgs (args *ProgramArgs) *RoleArgs{
-	ra := RoleArgs{}
-	ra.Operation = getOperationFromProgramArgs(args)
-	if ra.Operation == ""{
-		panic("invalid operation")
-	}
-
-	ra.MachineName = args.Args[3]
-	ra.Ip = args.Args[4]
-
-	return &ra
-}
-
-func doRole(pargs *ProgramArgs){
-
-}
-
-func getOperationFromProgramArgs(args *ProgramArgs) string{
-	for _, ops := range []string{OPERATION_ADD, OPERATION_DELETE}{
-		if  args.Args[2] == ops{
-			return ops
+func (p *Project) RemoveRole(role string) bool{
+	p.roleMutex.Lock()
+	for i, v := range p.Roles{
+		if v == role{
+			p.Roles = util.RemoveStringSlice(p.Roles, i)
+			return true
 		}
 	}
 
-	return ""
+	panic(fmt.Sprintf("Role %s not found", role))
 }

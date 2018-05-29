@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/tspn/ochy/project"
 )
 
 func doInit(args *ProgramArgs){
@@ -11,6 +10,6 @@ func doInit(args *ProgramArgs){
 	}
 
 	pn := args.Args[2]
-	ps := project.New(pn)
+	ps := NewProject(pn)
 	ps.Save()
 }

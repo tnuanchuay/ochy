@@ -1,16 +1,17 @@
-package project
+package main
 
 import (
 	"fmt"
 	"io/ioutil"
 	"github.com/tspn/ochy/util"
-	"github.com/tspn/ochy/model"
+	"sync"
 )
 
 type Project struct {
 	ProjectName string
-	Machines    []model.Machine
-	Roles       model.Roles
+	Machines    []Machine
+	Roles       []string
+	roleMutex   sync.Mutex
 }
 
 func (p Project) ToJson() string {
@@ -25,24 +26,7 @@ func (p Project) Save() {
 		panic("could not initial project file")
 	}
 }
-func (p Project) GetAllRoleName() []string{
-	s := make([]string, 0)
-	for _, ss := range p.Roles{
-		s = append(s, ss.Name)
-	}
-
-	return s
-}
-func (p Project) GetRole(role string) *model.Role{
-	for _, r := range p.Roles{
-		if r.Name == role{
-			return &r
-		}
-	}
-
-	return nil
-}
-func (p Project) GetMachine(name string) *model.Machine{
+func (p Project) GetMachine(name string) *Machine{
 	for _, m := range p.Machines{
 		if m.Name == name{
 			return &m
@@ -52,7 +36,7 @@ func (p Project) GetMachine(name string) *model.Machine{
 	return nil
 }
 
-func New(projectname string) *Project {
+func NewProject(projectname string) *Project {
 	return &Project{
 		ProjectName: projectname,
 	}
